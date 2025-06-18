@@ -18,8 +18,6 @@
  */
 package org.springframework.samples.petclinic.visits.web;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import javax.validation.Valid;
@@ -62,29 +60,12 @@ class VisitResource {
 
     private final DdbService ddbService;
 
-    private static final List<byte[]> memoryList = new ArrayList<>();
 
     @PostMapping("owners/*/pets/{petId}/visits")
     @ResponseStatus(HttpStatus.CREATED)
     public Visit create(
         @Valid @RequestBody Visit visit,
         @PathVariable("petId") @Min(1) int petId) {
-
-        // logging to see we are getting this call before the memory error w/ a searchable term
-        log.info("VisitResource create() called & boomshakalaka: {}", visit);
-        
-
-        byte[] memory = new byte[1024 * 1024 * 10];
-        Arrays.fill(memory, (byte) 1);
-        memoryList.add(memory);
-
-        // the lines above should be sufficient, but we can be overkill
-        int size = 100000000;
-        double sizeInMegabytes = (size * 8.0) / 1024.0 / 1024.0;
-        double[] randomNumbers = new double[size];
-        
-        String[] array = new String[100000 * 100000];
-
         Date currentDate = new Date();
         Date visitDate = visit.getDate();
         long durationInDays = (visitDate.getTime() - currentDate.getTime())/1000/3600/24;
