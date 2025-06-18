@@ -16,6 +16,7 @@ env: # hard-code resource names
   TOPOLOGY_BUCKET: cicd-topology-61d64816-cffc-40b9-88b2-e4d6c101b034
   AWS_EXECUTION_ENV: ${{ github.repository }}/actions/run/${{ github.run_id }}/${{ github.job }}
   TF_VAR_isengard_admin_role_arn: ${{ secrets.ISENGARD_ADMIN_ROLE_ARN }}
+  ACTION_ID: ${{ github.run_id }}-${{ github.run_attempt }}
 
 permissions:
   id-token: write
@@ -136,6 +137,10 @@ jobs:
       - name: Run kubectl commands
         run: |
           ./scripts/eks/appsignals/tf-deploy-k8s-res.sh
+      - name: Refresh visit-service pods
+        run: |
+          echo "Setting an envinronment variable in the deployment service causes the pods to redeploy, forcing the pods to pull the latest image"
+          kubectl set env deployment visits-service-java -n default REDEPOLY_ID=${{ env.ACTION_ID }}
       
       - name: Upload Application Topology Files to S3
         run: |          
