@@ -140,7 +140,7 @@ jobs:
       - name: Refresh visit-service pods
         run: |
           echo "Setting an envinronment variable in the deployment service causes the pods to redeploy, forcing the pods to pull the latest image"
-          kubectl set env deployment visits-service-java -n default REDEPOLY_ID=${{ env.ACTION_ID }}
+          kubectl set env deployment visits-service-java -n default REDEPLOY_ID=${{ env.ACTION_ID }}
       
       - name: Upload Application Topology Files to S3
         run: |          
