@@ -167,7 +167,3 @@ jobs:
           ENDPOINT="http://$(kubectl get ingress -o json  --output jsonpath='{.items[0].status.loadBalancer.ingress[0].hostname}')"
           echo "Using endpoint: $ENDPOINT"
           ./scripts/eks/appsignals/create-canaries.sh ${{ env.AWS_REGION }} create $ENDPOINT
-
-      - name: Create SLO
-        run: |
-          ./scripts/eks/appsignals/create-slo.sh ${{ env.TF_VAR_cluster_name }} ${{ env.AWS_REGION }}
