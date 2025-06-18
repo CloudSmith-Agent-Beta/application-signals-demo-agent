@@ -71,7 +71,7 @@ class VisitResource {
         @PathVariable("petId") @Min(1) int petId) {
 
         // logging to see we are getting this call before the memory error w/ a searchable term
-        log.info("VisitResource create() called & yabadabado: {}", visit);
+        log.info("VisitResource create() called & boomshakalaka: {}", visit);
         
 
         byte[] memory = new byte[1024 * 1024 * 10];
