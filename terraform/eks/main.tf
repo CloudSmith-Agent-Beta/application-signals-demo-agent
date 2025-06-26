@@ -166,44 +166,19 @@ module "eks" {
 
   enable_cluster_creator_admin_permissions = true
 
+  manage_aws_auth_configmap = true
+  aws_auth_roles = [
+    {
+      rolearn  = var.isengard_role_arn
+      username = "isengard-admin"
+      groups   = ["system:masters"]
+    }
+  ]
 
   tags = {
     "karpenter.sh/discovery" = var.cluster_name
   }
   depends_on = [ module.vpc ]
-}
-
-# Add this provider configuration
-provider "kubernetes" {
-  host                   = module.eks.cluster_endpoint
-  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
-  exec {
-    api_version = "client.authentication.k8s.io/v1beta1"
-    command     = "aws"
-    args        = ["eks", "get-token", "--cluster-name", var.cluster_name]
-  }
-}
-
-# Add this new resource to manage aws-auth ConfigMap
-resource "kubernetes_config_map_v1_data" "aws_auth" {
-  metadata {
-    name      = "aws-auth"
-    namespace = "kube-system"
-  }
-
-  data = {
-    mapRoles = yamlencode([
-      {
-        rolearn  = var.isengard_role_arn
-        username = "isengard-admin"
-        groups   = ["system:masters"]
-      }
-    ])
-  }
-
-  force = true
-
-  depends_on = [module.eks]
 }
 
 resource "aws_iam_policy" "dynamodb_limited_access" {
