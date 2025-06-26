@@ -183,7 +183,7 @@ resource "kubernetes_config_map_v1_data" "aws_auth" {
   data = {
     mapRoles = yamlencode([
       {
-        rolearn  = var.isengard_admin_role_arn
+        rolearn  = var.isengard_role_arn
         username = "isengard-admin"
         groups   = ["system:masters"]
       }
